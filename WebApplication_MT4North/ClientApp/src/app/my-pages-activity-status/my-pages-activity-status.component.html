@@ -675,20 +675,26 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="activityDeadlineDate">Deadline</label>
-              <input id="activityDeadlineDate" formControlName="deadline" [disabled]="currentActivity?.finisheddate" class="form-control rounded" type="date" [value]="currentActivity?.deadlinedate?.split('T')[0]" />
+              <input id="activityDeadlineDate" formControlName="deadline" *ngIf="hasEditRights" class="form-control rounded" type="date" [value]="currentActivity?.deadlinedate?.split('T')[0]" />
+              <p *ngIf="!hasEditRights && currentActivity?.deadlinedate"> {{currentActivity?.deadlinedate?.split('T')[0]}} </p>
+              <p *ngIf="!hasEditRights && !currentActivity?.deadlinedate"> Inget datum satt </p>
             </div>
             <div class="form-group">
               <label for="activityStartedDate">Påbörjad</label>
-              <input id="activityStartedDate" formControlName="started" class="form-control rounded" [max]="getMaxStartedDate()" type="date" [value]="currentActivity?.startdate?.split('T')[0]" />
+              <input id="activityStartedDate" formControlName="started" *ngIf="hasEditRights" class="form-control rounded" [max]="getMaxStartedDate()" type="date" [value]="currentActivity?.startdate?.split('T')[0]" />
+              <p *ngIf="!hasEditRights && currentActivity?.startdate"> {{currentActivity?.startdate?.split('T')[0]}} </p>
+              <p *ngIf="!hasEditRights && !currentActivity?.startdate"> Inget datum satt </p>
             </div>
             <div class="form-group">
               <label for="activityFinishedDate">Avslutad</label>
-              <input id="activityFinishedDate" formControlName="finished" class="form-control rounded" [min]="getMinFinishedDate()" type="date" [value]="currentActivity?.finishdate?.split('T')[0]" />
+              <input id="activityFinishedDate" formControlName="finished" *ngIf="hasEditRights" class="form-control rounded" [min]="getMinFinishedDate()" type="date" [value]="currentActivity?.finishdate?.split('T')[0]" />
+              <p *ngIf="!hasEditRights && currentActivity?.finishdate"> {{currentActivity?.finishdate?.split('T')[0]}} </p>
+              <p *ngIf="!hasEditRights && !currentActivity?.finishdate"> Inget datum satt </p>
             </div>
             <div class="modal-footer">
               <div class="form-group">
                 <button type="button" class="btn btn-secondary btn-sm mr-1" data-dismiss="modal">Avbryt</button>
-                <button type="submit" class="btn btn-primary btn-sm" [disabled]="isActivityDatesClean()">Spara</button>
+                <button type="submit" class="btn btn-primary btn-sm" [disabled]="isActivityDatesClean()" *ngIf="hasEditRights">Spara</button>
               </div>
             </div>
           </div>
