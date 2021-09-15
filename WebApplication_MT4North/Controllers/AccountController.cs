@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -422,11 +422,11 @@ namespace WebApplication_MT4North.Controllers
         }
 
 
-        [HttpPut("user/{id}")]
+        [HttpPut("user/{userId}")]
         [Authorize(Roles = "AdminUser")]
-        public async Task<ActionResult> UpdateUserAsync(string id, [FromBody] ApplicationUser request)
+        public async Task<ActionResult> UpdateUserAsync(string userId, [FromBody] ApplicationUser request)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return NotFound();
@@ -595,11 +595,11 @@ namespace WebApplication_MT4North.Controllers
             }
         }
 
-        [HttpDelete("user/{id}")]
+        [HttpDelete("user/{userId}")]
         [Authorize(Roles = "AdminUser")]
-        public async Task<ActionResult> DeleteUserByEmailAsync(string id)
+        public async Task<ActionResult> DeleteUserByEmailAsync(string userId)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 // Can't find user to delete
@@ -622,6 +622,21 @@ namespace WebApplication_MT4North.Controllers
                     _context.Projects.Remove(projectToRemove);
                     var projectsUserProjectsToRemove = await _context.UserProjects.Where(p => p.ProjectId == projectToRemove.ProjectId).ToListAsync<UserProject>();
                     _context.UserProjects.RemoveRange(projectsUserProjectsToRemove);
+                    // remove activities also, all of them! Both custom and base ...
+                    var projectActivities = await _context.Activities.Where(a => a.ProjectId == projectToRemove.ProjectId).ToListAsync<Activity>();
+                    foreach(var activity in projectActivities)
+                    {
+                        if (activity.CustomActivityInfoId != null)
+                        {
+                            var customActivity = await _context.CustomActivityInfos.FirstAsync(c => c.CustomActivityInfoId == activity.CustomActivityInfoId);
+                            _context.CustomActivityInfos.Remove(customActivity);
+                        }
+                        var resources = await _context.Resources.Where(r => r.ActivityId == activity.ActivityId).ToListAsync<Resource>();
+                        var notes = await _context.Notes.Where(n => n.ActivityId == activity.ActivityId).ToListAsync<Note>();
+                        _context.Resources.RemoveRange(resources);
+                        _context.Notes.RemoveRange(notes);
+                        _context.Activities.Remove(activity);
+                    }
                 }
                 await _context.SaveChangesAsync();
             }
@@ -639,7 +654,7 @@ namespace WebApplication_MT4North.Controllers
                 _jwtAuthManager.RemoveRefreshTokenByUserName(user.UserName);
                 return Ok(new StatusResult
                 {
-                    Message = "User " + id + " deleted"
+                    Message = "User " + userId + " deleted"
                 });
             }
             else
@@ -647,7 +662,7 @@ namespace WebApplication_MT4North.Controllers
                 var errors = deleteResult.Errors.Select(x => x.Description).ToList();
                 return BadRequest(new ErrorResult
                 {
-                    Message = "Error deleting user with email: " + id,
+                    Message = "Error deleting user with email: " + userId,
                     Errors = errors
                 });
             }
@@ -883,135 +898,3 @@ namespace WebApplication_MT4North.Controllers
         }*/
     }
 }
-
-/*using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using WebApplication_MT4North.Infrastructure;
-//using WebApplication_MT4North.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
-
-namespace WebApplication_MT4North.Controllers
-{
-    [ApiController]
-    [Authorize]
-    [Route("api/[controller]")]
-    public class AccountController : ControllerBase
-    {
-        private readonly ILogger<AccountController> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IJwtAuthManager _jwtAuthManager;
-
-        public AccountController(ILogger<AccountController> logger, UserManager<IdentityUser> userManager , RoleManager<IdentityRole> roleManager, IJwtAuthManager jwtAuthManager)
-        {
-            _logger = logger;
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _jwtAuthManager = jwtAuthManager;
-        }
-
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<ActionResult> LoginAsync([FromBody] LoginRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var user = _userManager.Users.SingleOrDefault(u => u.UserName == request.UserName);
-            if (user is null)
-            {
-                // User not found in db
-                return NotFound("User not found");
-            }
-            var userSigninResult = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (userSigninResult)
-            {
-                return Unauthorized();
-            }
-
-            var role = "BasicUser";// _userManager.GetUserRole(request.UserName);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name,request.UserName),
-                new Claim(ClaimTypes.Role, role)
-            };
-
-            var jwtResult = _jwtAuthManager.GenerateTokens(request.UserName, claims, DateTime.Now);
-            _logger.LogInformation($"User [{request.UserName}] logged in the system.");
-            return Ok(new LoginResult
-            {
-                UserName = request.UserName,
-                Role = role,
-                AccessToken = jwtResult.AccessToken,
-                RefreshToken = jwtResult.RefreshToken.TokenString
-            });
-        }
-
-        [HttpGet("user")]
-        [Authorize]
-        public ActionResult GetCurrentUser()
-        {
-            return Ok(new LoginResult
-            {
-                UserName = User.Identity?.Name,
-                Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
-                OriginalUserName = User.FindFirst("OriginalUserName")?.Value
-            });
-        }
-
-        [HttpPost("logout")]
-        [Authorize]
-        public ActionResult Logout()
-        {
-            // optionally "revoke" JWT token on the server side --> add the current token to a block-list
-            // https://github.com/auth0/node-jsonwebtoken/issues/375
-
-            var userName = User.Identity?.Name;
-            _jwtAuthManager.RemoveRefreshTokenByUserName(userName);
-            _logger.LogInformation($"User [{userName}] logged out the system.");
-            return Ok();
-        }
-
-        [HttpPost("refresh-token")]
-        [Authorize]
-        public async Task<ActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
-        {
-            try
-            {
-                var userName = User.Identity?.Name;
-                _logger.LogInformation($"User [{userName}] is trying to refresh JWT token.");
-
-                if (string.IsNullOrWhiteSpace(request.RefreshToken))
-                {
-                    return Unauthorized();
-                }
-
-                var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
-                var jwtResult = _jwtAuthManager.Refresh(request.RefreshToken, accessToken, DateTime.Now);
-                _logger.LogInformation($"User [{userName}] has refreshed JWT token.");
-                return Ok(new LoginResult
-                {
-                    UserName = userName,
-                    Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
-                    AccessToken = jwtResult.AccessToken,
-                    RefreshToken = jwtResult.RefreshToken.TokenString
-                });
-            }
-            catch (SecurityTokenException e)
-            {
-                return Unauthorized(e.Message); // return 401 so that the client side can redirect the user to login page
-            }
-        }
-
-    }
-}
-*/

@@ -211,26 +211,8 @@ namespace WebApplication_MT4North.Controllers
             {
                 var error = new ErrorResult();
                 error.Message = "User " + userEmail + " not found";
-                //return NotFound(error);
-                return Unauthorized();
+                return NotFound(error);
             }
-
-            /*UserProjectPermissions? rights = null;
-            switch(permissions)
-            {
-                case "R":
-                    rights = UserProjectPermissions.READ;
-                break;
-                case "W":
-                    rights = UserProjectPermissions.WRITE;
-                break;
-                case "RW":
-                    rights = UserProjectPermissions.READWRITE;
-                break;
-                default:
-                    return BadRequest();
-                break;
-            }*/
 
             var project = await _context.Projects.FindAsync(projectId);
             if (project == null)
