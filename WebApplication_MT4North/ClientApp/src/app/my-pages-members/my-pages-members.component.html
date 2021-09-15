@@ -50,7 +50,7 @@
     </div>-->
             </td>
             <td class="align-middle">
-              <p *ngIf="userProject.status == 0" class="font-italic float-left mt-2">Inbjudan skickad</p>
+              <span *ngIf="userProject.status == 0" class="font-italic float-left align-middle">Inbjudan skickad</span>
               <button class="btn btn-danger btn-sm float-right" [hidden]="!hasRights || userProject.isEditable || currentUser.id == userProject.user.id" (click)="leaveProject(userProject.userprojectid)">Ta bort</button>
               <button class="btn btn-danger btn-sm float-right" [disabled]="isCurrentUserOnlyOwner()" *ngIf="currentUser.id == userProject.user.id" (click)="leaveProject(userProject.userprojectid)">Lämna</button>
 
