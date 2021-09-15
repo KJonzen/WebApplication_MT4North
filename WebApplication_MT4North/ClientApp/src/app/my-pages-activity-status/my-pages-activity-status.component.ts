@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
-//import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 
 //import { Console } from 'console';
 
@@ -813,7 +813,7 @@ export class MyPagesActivityStatusComponent {
 
     this.collapseAll();
 
-    /*
+    
     html2canvas(this.imTableView.nativeElement).then(canvas => {
       //this.canvas.nativeElement.src = canvas.toDataURL();
       this.downloadLink.nativeElement.href = canvas.toDataURL('image/png');
@@ -822,8 +822,8 @@ export class MyPagesActivityStatusComponent {
       this.isScreenshotting = false;
       console.log('screenshot created');
     });
-    */
-    /*this.imTableView.nativeElement.removeClass += " animate";*/
+    
+    this.imTableView.nativeElement.removeClass += " animate";
 
 
   }

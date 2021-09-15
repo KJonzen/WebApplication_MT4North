@@ -38,7 +38,7 @@
             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
               <div *ngIf="f.password.errors.required">Lösenord är obligatoriskt</div>
               <div *ngIf="f.password.errors.minlength">Lösenordet måste innehålla minst 8 tecken</div>
-              <div *ngIf="f.password.errors.pattern">Lösenordet måste innehålla minst 1 siffra, 1 stor bokstav och 1 liten bokstav.</div>
+              <div *ngIf="f.password.errors.pattern">Lösenordet måste innehålla minst 1 siffra, 1 stor bokstav, 1 liten bokstav och 1 specialtecken.</div>
             </div>
           </div>
           <div class="form-group">

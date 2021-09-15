@@ -347,7 +347,7 @@
                                     </div>
 
                                     <div class="col-12">
-                                      <a *ngIf="!isBaseActivity(activity)" class="btn activity-function-btn p-0 im-theme-{{i}}" (click)="setCurrentActivityInfo(activity)">
+                                      <a *ngIf="!isBaseActivity(activity) && hasEditRights" class="btn activity-function-btn p-0 im-theme-{{i}}" (click)="setCurrentActivityInfo(activity)">
                                         <p>
                                           <i class="fa fa-edit fa-fw"></i><span class="ml-1">Redigera</span>
                                         </p>
@@ -418,8 +418,8 @@
               </tr>
               <tr>
                 <!--<td>Understruken text</td>-->
-                <td><u>Genomstrukten text</u></td>
-                <td>~~Genomstrukten text~~</td>
+                <td><u>Understrukten text</u></td>
+                <td>~~Understrukten text~~</td>
               </tr>
               <tr>
                 <!--<td>Länk</td>-->
