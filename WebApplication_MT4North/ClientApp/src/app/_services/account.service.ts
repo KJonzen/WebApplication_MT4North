@@ -66,8 +66,10 @@ export class AccountService {
   getCurrentUser() {
     return this.http.get<User>(`${environment.apiUrl}/Account/user`).pipe(map(user => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      //var token = currentUserValue.accessToken;
-      
+      // why?
+      if (user.gender == "null") {
+        user.gender = null;
+      }
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUserSubject.next(user);
       return user;
@@ -77,7 +79,10 @@ export class AccountService {
     getById(id: string) {
       return this.http.get<User>(`${environment.apiUrl}/users/${id}`).pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        console.log('TEST2');
+        // why?
+        if (user.gender == "null") {
+          user.gender = null;
+        }
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         return user;
@@ -85,19 +90,18 @@ export class AccountService {
   }
 
   update(params) {
-    //console.log(params);
-      return this.http.put(`${environment.apiUrl}/Account/user`, params)
-        .pipe(map(x => {
-           {
-            // update local storage
-            const user = { ...this.currentUserValue, ...params };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            console.log('USER: ', user);
-            // publish updated user to subscribers
-            this.currentUserSubject.next(user);
-          }
-          return x;
-        }));
+    return this.http.put(`${environment.apiUrl}/Account/user`, params)
+      .pipe(map(x => {
+          {
+          // update local storage
+          const user = { ...this.currentUserValue, ...params };
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          console.log('USER: ', user);
+          // publish updated user to subscribers
+          this.currentUserSubject.next(user);
+        }
+        return x;
+      }));
   }
 
   delete(): Observable<any> {

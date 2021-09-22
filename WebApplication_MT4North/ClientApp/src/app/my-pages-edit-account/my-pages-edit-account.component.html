@@ -8,7 +8,7 @@
         <label for="firstname">Förnamn</label><div class="info-text float-right text-black-50 align-bottom">
           <i class="fa fa-globe"></i> Alltid synligt <span class="tooltiptext">Synligt och sökbart för alla användare.</span>
         </div>
-        <input type="text" formControlName="firstname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }"/>
+        <input type="text" formControlName="firstname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" />
         <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
           <div *ngIf="f.firstname.errors.required">Förnamn är obligatoriskt</div>
         </div>
@@ -18,28 +18,57 @@
         <div class="info-text float-right text-black-50">
           <i class="fa fa-globe"></i> Alltid synligt <span class="tooltiptext">Synligt och sökbart för alla användare.</span>
         </div>
-        <input type="text" formControlName="lastname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }"/>
+        <input type="text" formControlName="lastname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }" />
         <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
           <div *ngIf="f.lastname.errors.required">Efternamn är obligatoriskt</div>
         </div>
       </div>
       <!--<div class="form-group">
-      <label for="username">Användarnamn</label>
-      <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
-      <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-        <div *ngIf="f.username.errors.required">Användarnamn är obligatoriskt</div>
-      </div>
-    </div>-->
+    <label for="username">Användarnamn</label>
+    <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+      <div *ngIf="f.username.errors.required">Användarnamn är obligatoriskt</div>
+    </div>
+  </div>-->
       <div class="form-group">
         <label for="email">E-postadress</label>
         <div class="info-text float-right text-black-50">
           <i class="fa fa-lock"></i> Alltid dold <span class="tooltiptext">Alltid dold och ej sökbar.</span>
         </div>
-        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"/>
+        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
         <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
           <div *ngIf="f.email.errors.required">E-postadress är obligatoriskt</div>
         </div>
       </div>
+
+      <!-- -->
+      <div class="form-group">
+        <label for="formcontrolgender">Könsidentitet</label>
+        <div class="info-text float-right text-black-50">
+          <i class="fa fa-globe"></i> Alltid synligt <span class="tooltiptext">Synligt och sökbart för alla användare.</span>
+        </div>
+        <select id="formcontrolgender" class="form-control" formControlName="gender">
+          <option *ngFor="let gender of gender_options" [ngValue]="gender">{{gender.name}}</option>
+        </select>
+      </div>
+      <!-- -->
+      <div class="form-group">
+        <label for="formcontrolcompany">Organisation</label>
+        <div class="info-text float-right text-black-50">
+          <i class="fa fa-globe"></i> Alltid synligt <span class="tooltiptext">Synligt och sökbart för alla användare.</span>
+        </div>
+        <input id="formcontrolcompany" type="text" formControlName="company" class="form-control rounded"/>
+      </div>
+      <!-- -->
+      <div class="form-group">
+        <label for="formcontrolcountry">Region / Land</label>
+        <div class="info-text float-right text-black-50">
+          <i class="fa fa-globe"></i> Alltid synligt <span class="tooltiptext">Synligt och sökbart för alla användare.</span>
+        </div>
+        <input id="formcontrolcountry" type="text" formControlName="country" class="form-control rounded" />
+      </div>
+      <!-- -->
+
       <div class="form-group">
         <button [disabled]="loading || !form.dirty" class="btn im-btn-primary">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>

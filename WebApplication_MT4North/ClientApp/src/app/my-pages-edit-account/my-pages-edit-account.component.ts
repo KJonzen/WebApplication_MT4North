@@ -20,6 +20,7 @@ export class MyPagesEditAccountComponent implements OnDestroy {
   submitted = false;
   currentUser: User;
   accountSubscription: Subscription;
+  public gender_options: any[] = [{ id: null, name: "Vill inte ange" }, { id: 0, name: "Kvinna" }, { id: 1, name: "Man" }, { id: 2, name: "Annat" }];
 
   constructor(
     private viewService: ViewService,
@@ -36,8 +37,10 @@ export class MyPagesEditAccountComponent implements OnDestroy {
       firstname: [this.currentUser.firstname, Validators.required],
       lastname: [this.currentUser.lastname, Validators.required],
       email: [this.currentUser.email, [Validators.required, Validators.email]],
+      gender: [this.gender_options.find(x => x.id == this.currentUser.gender)],
+      company: [this.currentUser.companyname],
+      country: [this.currentUser.country]
     });
-
   }
 
   ngOnDestroy() {
@@ -63,8 +66,17 @@ export class MyPagesEditAccountComponent implements OnDestroy {
       return;
     }
 
+    var updateRequest = {
+      firstname: this.form.value.firstname,
+      lastname: this.form.value.lastname,
+      email: this.form.value.email,
+      gender: ""+this.form.value.gender.id,
+      companyname: this.form.value.company,
+      country: this.form.value.country
+    };
+
     this.loading = true;
-    this.accountService.update(this.form.value)
+    this.accountService.update(updateRequest) /*this.form.value)*/
       .pipe(first())
       .subscribe(
         data => {
