@@ -36,7 +36,10 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.router.navigate(['/my-pages/start']);
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/my-pages/start';
+    // always return to 'mina-sidor' when after loggin in.
+    this.returnUrl = '/my-pages/start';
+    //todo: fix this: this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/my-pages/start';
+    // user needs to be redirected to 'mina-sidor', otherwise the data is not fetced from the the api correctly
   }
 
   // convenience getter for easy access to form fields
