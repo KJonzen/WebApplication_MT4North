@@ -152,7 +152,9 @@ namespace WebApplication_MT4North.IntegrationTests
             return null;
         }
 
-        private async void delThemeAsync(Theme theme, HttpStatusCode expectedHttpStatus)
+        private async 
+        Task
+delThemeAsync(Theme theme, HttpStatusCode expectedHttpStatus)
         {
             var response = await _httpClient.DeleteAsync("api/Themes/" + theme.ThemeId);
             Assert.AreEqual(expectedHttpStatus, response.StatusCode);
@@ -267,7 +269,7 @@ namespace WebApplication_MT4North.IntegrationTests
             // Autherize User
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, authUser);
             Assert.IsNotNull(_newTheme);
-            delThemeAsync(_newTheme, HttpStatusCode.Forbidden);
+            await delThemeAsync(_newTheme, HttpStatusCode.Forbidden);
         }
 
         [TestMethod]
@@ -276,7 +278,7 @@ namespace WebApplication_MT4North.IntegrationTests
             // Autherize Admin
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, authAdmin);
             Assert.IsNotNull(_newTheme);
-            delThemeAsync(_newTheme, HttpStatusCode.OK);
+            await delThemeAsync(_newTheme, HttpStatusCode.OK);
         }
 
     }

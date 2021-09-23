@@ -36,7 +36,7 @@ namespace WebApplication_MT4North
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<MT4NorthContext>(options => options.UseSqlServer(Configuration.GetConnectionString("developmentdb")));
+            services.AddDbContext<MT4NorthContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WebApplication_MT4NorthContextConnection")));
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
             services.AddAuthentication(x =>
@@ -81,7 +81,7 @@ namespace WebApplication_MT4North
                 var securityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
-                    Description = "Enter JWT Bearer token **_only_**", //TODO
+                    Description = "Enter JWT Bearer token **_only_**", 
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
                     Scheme = "bearer", // must be lower case

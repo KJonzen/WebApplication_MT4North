@@ -422,11 +422,11 @@ namespace WebApplication_MT4North.Controllers
         }
 
 
-        [HttpPut("user/{userId}")]
+        [HttpPut("user/{id}")]
         [Authorize(Roles = "AdminUser")]
-        public async Task<ActionResult> UpdateUserAsync(string userId, [FromBody] ApplicationUser request)
+        public async Task<ActionResult> UpdateUserAsync(string id, [FromBody] ApplicationUser request)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -595,11 +595,11 @@ namespace WebApplication_MT4North.Controllers
             }
         }
 
-        [HttpDelete("user/{userId}")]
+        [HttpDelete("user/{id}")]
         [Authorize(Roles = "AdminUser")]
-        public async Task<ActionResult> DeleteUserByEmailAsync(string userId)
+        public async Task<ActionResult> DeleteUserByEmailAsync(string id)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 // Can't find user to delete
@@ -654,7 +654,7 @@ namespace WebApplication_MT4North.Controllers
                 _jwtAuthManager.RemoveRefreshTokenByUserName(user.UserName);
                 return Ok(new StatusResult
                 {
-                    Message = "User " + userId + " deleted"
+                    Message = "User " + id + " deleted"
                 });
             }
             else
@@ -662,7 +662,7 @@ namespace WebApplication_MT4North.Controllers
                 var errors = deleteResult.Errors.Select(x => x.Description).ToList();
                 return BadRequest(new ErrorResult
                 {
-                    Message = "Error deleting user with email: " + userId,
+                    Message = "Error deleting user with email: " + id,
                     Errors = errors
                 });
             }
