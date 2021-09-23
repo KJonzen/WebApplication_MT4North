@@ -87,7 +87,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="invitationForm" class="form-group mt-2" [style.display]="isFirstStepModal ? 'none' : 'block'">
+          <form [formGroup]="invitationForm" class="form-group mt-2" [style.display]="'block'">
             <label for="projectTitle"><b>Projektmedlemmar</b></label>
             <div *ngFor="let userInvitation of userInvitations">
               <div class="card mb-1 col-6" style="background-color: #F9F9F9; border: 1px solid lightgray">
@@ -130,7 +130,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button [disabled]="userInvitations.length == 0" type="button" class="btn im-btn-primary" data-dismiss="modal" [style.display]="isFirstStepModal ? 'none' : 'block'" (click)="inviteMembers()">Bjud in till projekt</button>
+          <button [disabled]="userInvitations.length == 0" type="button" class="btn im-btn-primary" data-dismiss="modal" [style.display]="'block'" (click)="inviteMembers()">Bjud in till projekt</button>
         </div>
       </div>
     </div>

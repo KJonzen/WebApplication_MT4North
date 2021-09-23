@@ -188,7 +188,6 @@ namespace WebApplication_MT4North.Controllers
                     throw;
                 }
             }
-            return NoContent();
         }
 
         // POST: api/Notes

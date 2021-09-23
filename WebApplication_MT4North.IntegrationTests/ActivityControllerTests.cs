@@ -57,12 +57,6 @@ namespace WebApplication_MT4North.IntegrationTests
         private string authUser3;
         private string authUser4;
 
-
-        private static Project _newProject;
-        private static Activity _newActivity1, _newActivity2, _newActivity3, _newActivity4, _newActivity5;
-        private static CustomActivityInfo _customActivity1, _customActivity2, _customActivity3;
-        private static BaseActivityInfo _baseActivity1, _baseActivity2;
-
         private readonly TestHostFixture _testHostFixture = new TestHostFixture();
         private HttpClient _httpClient;
         private IServiceProvider _serviceProvider;

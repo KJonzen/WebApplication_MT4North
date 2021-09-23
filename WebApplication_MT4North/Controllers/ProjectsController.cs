@@ -251,7 +251,6 @@ namespace WebApplication_MT4North.Controllers
                     throw;
                 }
             }
-            return NoContent();
         }
 
         // DELETE: api/Projects/{id}

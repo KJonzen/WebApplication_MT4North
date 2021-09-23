@@ -58,7 +58,8 @@ namespace WebApplication_MT4North.Controllers
         {
             string userEmail = ((ClaimsIdentity)User.Identity).Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = await _userManager.FindByEmailAsync(userEmail);
-            if (user == null) {
+            if (user == null)
+            {
                 return Unauthorized();
             } 
             else
@@ -517,12 +518,12 @@ namespace WebApplication_MT4North.Controllers
             // the changes to the notes is only saved to the database if and only if we choose to delete the user-project
             var projectActivities = await _context.Activities.Where(a => a.ProjectId == userProject.ProjectId).ToListAsync<Activity>();
             var userNotes = new List<Note>();
-            foreach(var activity in projectActivities)
+            foreach (var activity in projectActivities)
             {
                 var notes = await _context.Notes.Where(n => n.UserId == userProject.UserId && n.ActivityId == activity.ActivityId).ToListAsync<Note>();
                 userNotes.AddRange(notes);
             }
-            foreach(var note in userNotes)
+            foreach (var note in userNotes)
             {
                 note.UserId = null;
             }
